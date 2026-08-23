@@ -132,7 +132,7 @@ class BodyMapView @JvmOverloads constructor(
             Hotspot("Right knee", 0.60f, 0.73f),
             Hotspot("Left hip", 0.38f, 0.52f),
             Hotspot("Right hip", 0.62f, 0.52f),
-            Hotspot("Lower back", 0.50f, 0.47f),
+            Hotspot("Lower back", 0.50f, 0.45f),
             Hotspot("Left wrist", 0.20f, 0.48f),
             Hotspot("Right wrist", 0.80f, 0.48f),
             Hotspot("Left elbow", 0.22f, 0.36f),
