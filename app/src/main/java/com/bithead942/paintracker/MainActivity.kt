@@ -6,12 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bodyMapView: BodyMapView
     private lateinit var statusText: TextView
     private lateinit var submitButton: Button
+    private lateinit var hamburgerButton: ImageButton
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
 
@@ -39,12 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
-        val toolbar = findViewById<Toolbar>(R.id.mainToolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        hamburgerButton = findViewById(R.id.hamburgerButton)
 
-        toolbar.setNavigationIcon(R.drawable.ic_menu)
-        toolbar.setNavigationOnClickListener {
+        hamburgerButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
