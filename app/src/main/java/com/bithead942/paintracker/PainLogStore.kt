@@ -29,6 +29,24 @@ object PainLogStore {
 
     fun getLog(context: Context, date: String): PainLog? = loadAll(context)[date]
 
+    fun seedTestData(context: Context) {
+        val logs = loadAll(context).toMutableMap()
+        val cal = Calendar.getInstance()
+        val random = java.util.Random(12345)
+        for (i in 19 downTo 0) {
+            cal.time = Date()
+            cal.add(Calendar.DAY_OF_YEAR, -i)
+            val date = dateFormatter.format(cal.time)
+            if (logs.containsKey(date)) continue
+            val count = 1 + random.nextInt(3)
+            val selected = BodyMapView.LOCATIONS.shuffled(random).take(count)
+            val entries = selected.map { PainEntry(it, 1 + random.nextInt(3)) }
+            val time = if (i == 0) timeFormatter.format(Date()) else ""
+            logs[date] = PainLog(date, time, entries)
+        }
+        writeLogs(context, logs.values.toList())
+    }
+
     fun getRecentLogs(context: Context, days: Int = 7, location: String? = null): List<Pair<String, Int>> {
         val all = loadAll(context)
         val result = mutableListOf<Pair<String, Int>>()

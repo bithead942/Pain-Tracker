@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         submitButton.setOnClickListener { onSubmit() }
 
+        PainLogStore.seedTestData(this)
         loadToday()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
