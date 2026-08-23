@@ -10,6 +10,10 @@ class ReminderReceiver : BroadcastReceiver() {
         val settings = SettingsStore(context)
         when (intent.action) {
             ACTION_DAILY -> {
+                if (SettingsStore(context).lastPurgeDate != PainLogStore.today()) {
+                    PainLogStore.purgeOldLogs(context)
+                    SettingsStore(context).lastPurgeDate = PainLogStore.today()
+                }
                 notify(context, settings)
                 ReminderManager.reschedule(context)
                 ReminderManager.scheduleFollowUp(context)

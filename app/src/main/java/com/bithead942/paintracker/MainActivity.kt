@@ -71,6 +71,12 @@ class MainActivity : AppCompatActivity() {
 
         submitButton.setOnClickListener { onSubmit() }
 
+        val settings = SettingsStore(this)
+        if (settings.lastPurgeDate != PainLogStore.today()) {
+            PainLogStore.purgeOldLogs(this)
+            settings.lastPurgeDate = PainLogStore.today()
+        }
+
         PainLogStore.seedTestData(this)
         loadToday()
 

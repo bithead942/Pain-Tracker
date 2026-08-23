@@ -47,6 +47,16 @@ object PainLogStore {
         writeLogs(context, logs.values.toList())
     }
 
+    fun purgeOldLogs(context: Context, months: Int = 6) {
+        val logs = loadAll(context).toMutableMap()
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.MONTH, -months)
+        val cutoff = dateFormatter.format(cal.time)
+        val toRemove = logs.keys.filter { it < cutoff }
+        for (date in toRemove) logs.remove(date)
+        writeLogs(context, logs.values.toList())
+    }
+
     fun getRecentLogs(context: Context, days: Int = 7, location: String? = null): List<Pair<String, Int>> {
         val all = loadAll(context)
         val result = mutableListOf<Pair<String, Int>>()

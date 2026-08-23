@@ -35,6 +35,10 @@ class SettingsStore(context: Context) {
         get() = prefs.getBoolean(REMINDERS, true)
         set(value) = prefs.edit().putBoolean(REMINDERS, value).apply()
 
+    var lastPurgeDate: String
+        get() = prefs.getString(LAST_PURGE, "") ?: ""
+        set(value) = prefs.edit().putString(LAST_PURGE, value).apply()
+
     companion object {
         private const val PREFS_NAME = "pain_tracker_settings"
         private const val HOUR = "reminder_hour"
@@ -44,5 +48,6 @@ class SettingsStore(context: Context) {
         private const val VIBRATE = "vibration_enabled"
         private const val INTERVAL = "reminder_interval"
         private const val REMINDERS = "reminders_enabled"
+        private const val LAST_PURGE = "last_purge_date"
     }
 }
