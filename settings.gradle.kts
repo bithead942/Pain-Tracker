@@ -24,4 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Pain Tracker"
 include(":app")
- 
