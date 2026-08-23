@@ -47,28 +47,23 @@
         android:layout_marginEnd="16dp"
         android:timePickerMode="spinner" />
 
-    <LinearLayout
+    <Switch
+        android:id="@+id/soundSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:text="@string/sound" />
 
-        <Switch
-            android:id="@+id/soundSwitch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sound" />
-
-        <Switch
-            android:id="@+id/vibrateSwitch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/vibration" />
-    </LinearLayout>
+    <Switch
+        android:id="@+id/vibrateSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/vibration" />
 
     <TextView
         android:layout_width="match_parent"
