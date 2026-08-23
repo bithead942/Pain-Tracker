@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             getString(R.string.log_recorded_today)
         }
-        ReminderManager.cancelFollowUp(this)
+        ReminderManager.rescheduleForTomorrow(this)
         Toast.makeText(this, "Pain log saved", Toast.LENGTH_SHORT).show()
     }
 }

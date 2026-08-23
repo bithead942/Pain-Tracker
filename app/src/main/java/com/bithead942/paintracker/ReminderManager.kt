@@ -34,6 +34,34 @@ object ReminderManager {
         )
     }
 
+    fun rescheduleForTomorrow(context: Context) {
+        val settings = SettingsStore(context)
+        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        cancelDaily(context)
+        cancelFollowUp(context)
+
+        val first = nextDailyTime(settings.reminderHour, settings.reminderMinute)
+        val now = Calendar.getInstance()
+        if (first.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR)) {
+            first.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        val dailyIntent = Intent(context, ReminderReceiver::class.java).apply {
+            action = ReminderReceiver.ACTION_DAILY
+        }
+        val dailyPending = PendingIntent.getBroadcast(
+            context, DAILY_REQUEST, dailyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        am.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
+            first.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            dailyPending
+        )
+    }
+
     fun scheduleFollowUp(context: Context) {
         val settings = SettingsStore(context)
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
