@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
             settings.lastPurgeDate = PainLogStore.today()
         }
 
-        PainLogStore.seedTestData(this)
         loadToday()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
