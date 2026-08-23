@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_history -> startActivity(Intent(this, HistoryActivity::class.java))
                 R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.action_reset_history -> confirmResetHistory()
+                R.id.action_share -> shareHistory()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -101,6 +103,18 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(dateChangeReceiver)
+    }
+
+    private fun shareHistory() {
+        val today = PainLogStore.today()
+        val subject = "Pain tracker history as of $today"
+        val body = PainLogStore.buildHistoryText(this, 30)
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
+        startActivity(Intent.createChooser(intent, "Send email"))
     }
 
     private fun confirmResetHistory() {

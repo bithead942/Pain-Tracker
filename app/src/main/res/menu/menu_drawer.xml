@@ -7,6 +7,9 @@
         android:id="@+id/action_reset_history"
         android:title="@string/reset_history" />
     <item
+        android:id="@+id/action_share"
+        android:title="@string/share" />
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings" />
 </menu>

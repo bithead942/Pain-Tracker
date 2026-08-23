@@ -82,6 +82,34 @@ object PainLogStore {
         if (file.exists()) file.delete()
     }
 
+    fun buildHistoryText(context: Context, days: Int = 30): String {
+        val all = getAllLogs(context, descending = true)
+        val cal = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -days) }
+        val cutoff = dateFormatter.format(cal.time)
+        val logs = all.filter { it.date >= cutoff }
+        val sb = StringBuilder()
+        sb.appendLine("Pain log history for the past $days days:")
+        sb.appendLine()
+        for (log in logs) {
+            sb.appendLine(log.date)
+            if (log.entries.isEmpty()) {
+                sb.appendLine("  No pain recorded")
+            } else {
+                for (e in log.entries) {
+                    val severity = when (e.severity) {
+                        1 -> "Mild"
+                        2 -> "Moderate"
+                        3 -> "Severe"
+                        else -> "None"
+                    }
+                    sb.appendLine("  - ${e.location}: $severity")
+                }
+            }
+            sb.appendLine()
+        }
+        return sb.toString()
+    }
+
     fun getAllLogs(context: Context, descending: Boolean = true): List<PainLog> {
         val all = loadAll(context).values.toList()
         return if (descending) all.sortedByDescending { it.date } else all.sortedBy { it.date }
