@@ -1,12 +1,10 @@
 package com.bithead942.paintracker
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 
 class HistoryActivity : AppCompatActivity() {
 
@@ -17,11 +15,11 @@ class HistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-        val toolbar = findViewById<Toolbar>(R.id.historyToolbar)
-        setSupportActionBar(toolbar)
-
         barChartView = findViewById(R.id.barChartView)
         listView = findViewById(R.id.historyListView)
+
+        val backButton = findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener { finish() }
 
         val recent = PainLogStore.getRecentLogs(this, 7)
         barChartView.setData(recent)
@@ -45,17 +43,5 @@ class HistoryActivity : AppCompatActivity() {
         2 -> "moderate"
         3 -> "severe"
         else -> "none"
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_history, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.action_back) {
-            finish()
-            true
-        } else super.onOptionsItemSelected(item)
     }
 }
