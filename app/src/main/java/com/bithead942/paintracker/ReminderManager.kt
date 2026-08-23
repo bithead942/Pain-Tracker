@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import java.util.*
 
 object ReminderManager {
@@ -56,7 +55,6 @@ object ReminderManager {
     private fun setDailyAlarm(context: Context, am: AlarmManager, time: Long, pending: PendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
             am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending)
-            Toast.makeText(context, "Exact alarms not allowed; reminder may be slightly delayed", Toast.LENGTH_LONG).show()
             return
         }
 
