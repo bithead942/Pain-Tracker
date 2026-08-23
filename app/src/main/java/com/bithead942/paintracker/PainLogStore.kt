@@ -42,10 +42,8 @@ object PainLogStore {
                 val max = log?.entries?.maxOfOrNull { it.severity } ?: 0
                 result.add(date to max)
             } else {
-                val entry = log?.entries?.find { it.location == location }
-                if (entry != null) {
-                    result.add(date to entry.severity)
-                }
+                val severity = log?.entries?.find { it.location == location }?.severity ?: 0
+                result.add(date to severity)
             }
         }
         return result
