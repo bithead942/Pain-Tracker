@@ -15,11 +15,20 @@ class BarChartView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val data = mutableListOf<Pair<String, Int>>()
+    private val pressureData = mutableListOf<Pair<String, Int>>()
 
     fun setData(values: List<Pair<String, Int>>) {
         data.clear()
         data.addAll(values)
+        invalidate()
+    }
+
+    fun setPressureData(values: List<Pair<String, Int>>) {
+        pressureData.clear()
+        pressureData.addAll(values)
         invalidate()
     }
 
@@ -34,9 +43,11 @@ class BarChartView @JvmOverloads constructor(
         paint.strokeWidth = 3f
         canvas.drawLine(padding, padding, padding, bottom, paint)
         canvas.drawLine(padding, bottom, width - padding, bottom, paint)
+        canvas.drawLine(width - padding, padding, width - padding, bottom, paint)
 
         textPaint.color = Color.BLACK
         textPaint.textSize = 24f
+
         textPaint.textAlign = Paint.Align.RIGHT
         val levels = listOf("Severe", "Moderate", "Mild", "None")
         val step = chartH / 3f
@@ -44,6 +55,11 @@ class BarChartView @JvmOverloads constructor(
             val y = padding + i * step
             canvas.drawText(levels[i], padding - 10, y + 8, textPaint)
         }
+
+        textPaint.textAlign = Paint.Align.LEFT
+        canvas.drawText("1050", width - padding + 10, padding + 8, textPaint)
+        canvas.drawText("1000", width - padding + 10, padding + chartH / 2 + 8, textPaint)
+        canvas.drawText("950", width - padding + 10, bottom + 8, textPaint)
 
         if (data.isEmpty()) return
         val gap = chartW / data.size
@@ -63,6 +79,30 @@ class BarChartView @JvmOverloads constructor(
 
             textPaint.textAlign = Paint.Align.CENTER
             canvas.drawText(formatDate(pair.first), x + barW / 2, bottom + 30, textPaint)
+        }
+
+        linePaint.color = Color.BLUE
+        linePaint.strokeWidth = 4f
+        dotPaint.color = Color.BLUE
+
+        val points = mutableListOf<Pair<Float, Float>>()
+        for ((i, pair) in pressureData.withIndex()) {
+            val pressure = pair.second
+            if (pressure == -1) continue
+            val t = ((pressure - 950).coerceIn(0, 100)) / 100f
+            val y = bottom - t * chartH
+            val x = padding + i * gap + gap / 2
+            points.add(x to y)
+        }
+
+        for (i in 0 until points.size - 1) {
+            val (x1, y1) = points[i]
+            val (x2, y2) = points[i + 1]
+            canvas.drawLine(x1, y1, x2, y2, linePaint)
+        }
+
+        for ((x, y) in points) {
+            canvas.drawCircle(x, y, 8f, dotPaint)
         }
     }
 

@@ -50,6 +50,10 @@ class HistoryActivity : AppCompatActivity() {
         barChartView.setData(recent)
 
         val allLogs = PainLogStore.getAllLogs(this, descending = true)
+        val byDate = allLogs.associateBy { it.date }
+        val pressureList = recent.map { it.first to (byDate[it.first]?.pressure ?: -1) }
+        barChartView.setPressureData(pressureList)
+
         val logs = if (location == null) {
             allLogs
         } else {
