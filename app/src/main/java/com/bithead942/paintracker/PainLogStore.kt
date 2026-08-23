@@ -10,21 +10,20 @@ import java.util.*
 object PainLogStore {
     private const val FILE_NAME = "pain_logs.json"
     private const val DATE_FORMAT = "yyyy-MM-dd"
+    private const val TIME_FORMAT = "h:mm a"
 
-    data class PainLog(val date: String, val entries: List<PainEntry>)
+    data class PainLog(val date: String, val savedAt: String, val entries: List<PainEntry>)
     data class PainEntry(val location: String, val severity: Int)
 
     private val dateFormatter = SimpleDateFormat(DATE_FORMAT, Locale.US)
+    private val timeFormatter = SimpleDateFormat(TIME_FORMAT, Locale.US)
 
     fun today(): String = dateFormatter.format(Date())
 
     fun saveLog(context: Context, date: String, entries: List<PainEntry>) {
         val logs = loadAll(context).toMutableMap()
-        if (entries.isEmpty()) {
-            logs[date] = PainLog(date, emptyList())
-        } else {
-            logs[date] = PainLog(date, entries)
-        }
+        val time = timeFormatter.format(Date())
+        logs[date] = PainLog(date, time, entries)
         writeLogs(context, logs.values.toList())
     }
 
@@ -58,13 +57,22 @@ object PainLogStore {
         val obj = JSONObject(json)
         val map = mutableMapOf<String, PainLog>()
         for (key in obj.keys()) {
-            val arr = obj.getJSONArray(key)
+            val savedAt: String
+            val arr: JSONArray
+            val value = obj.get(key)
+            if (value is JSONObject) {
+                savedAt = value.optString("savedAt", "")
+                arr = value.getJSONArray("entries")
+            } else {
+                arr = obj.getJSONArray(key)
+                savedAt = ""
+            }
             val entries = mutableListOf<PainEntry>()
             for (i in 0 until arr.length()) {
                 val item = arr.getJSONObject(i)
                 entries.add(PainEntry(item.getString("location"), item.getInt("severity")))
             }
-            map[key] = PainLog(key, entries)
+            map[key] = PainLog(key, savedAt, entries)
         }
         return map
     }
@@ -79,7 +87,10 @@ object PainLogStore {
                 item.put("severity", e.severity)
                 arr.put(item)
             }
-            obj.put(log.date, arr)
+            val logObj = JSONObject()
+            logObj.put("savedAt", log.savedAt)
+            logObj.put("entries", arr)
+            obj.put(log.date, logObj)
         }
         File(context.filesDir, FILE_NAME).writeText(obj.toString())
     }

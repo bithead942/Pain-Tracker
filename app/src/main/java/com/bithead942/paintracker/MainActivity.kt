@@ -75,7 +75,11 @@ class MainActivity : AppCompatActivity() {
     private fun loadToday() {
         val log = PainLogStore.getLog(this, PainLogStore.today())
         if (log != null) {
-            statusText.text = getString(R.string.log_recorded_today)
+            statusText.text = if (log.savedAt.isNotEmpty()) {
+                "${getString(R.string.log_recorded_today)} at ${log.savedAt}"
+            } else {
+                getString(R.string.log_recorded_today)
+            }
             bodyMapView.setJoints(log.entries)
         } else {
             statusText.text = getString(R.string.no_log_today)
@@ -101,7 +105,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveLog(date: String, entries: List<PainLogStore.PainEntry>) {
         PainLogStore.saveLog(this, date, entries)
-        statusText.text = getString(R.string.log_recorded_today)
+        val saved = PainLogStore.getLog(this, date)
+        statusText.text = if (saved?.savedAt?.isNotEmpty() == true) {
+            "${getString(R.string.log_recorded_today)} at ${saved.savedAt}"
+        } else {
+            getString(R.string.log_recorded_today)
+        }
         ReminderManager.cancelFollowUp(this)
         Toast.makeText(this, "Pain log saved", Toast.LENGTH_SHORT).show()
     }
