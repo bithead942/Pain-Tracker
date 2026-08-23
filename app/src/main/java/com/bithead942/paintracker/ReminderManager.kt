@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.Toast
 import java.util.*
 
 object ReminderManager {
@@ -26,12 +27,7 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val info = AlarmManager.AlarmClockInfo(first.timeInMillis, null)
-            am.setAlarmClock(info, dailyPending)
-        } else {
-            am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
-        }
+        setDailyAlarm(context, am, first.timeInMillis, dailyPending)
     }
 
     fun rescheduleForTomorrow(context: Context) {
@@ -54,11 +50,28 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        setDailyAlarm(context, am, first.timeInMillis, dailyPending)
+    }
+
+    private fun setDailyAlarm(context: Context, am: AlarmManager, time: Long, pending: PendingIntent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending)
+            Toast.makeText(context, "Exact alarms not allowed; reminder may be slightly delayed", Toast.LENGTH_LONG).show()
+            return
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val info = AlarmManager.AlarmClockInfo(first.timeInMillis, null)
-            am.setAlarmClock(info, dailyPending)
+            val showIntent = PendingIntent.getActivity(
+                context, 0,
+                Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val info = AlarmManager.AlarmClockInfo(time, showIntent)
+            am.setAlarmClock(info, pending)
         } else {
-            am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+            am.setExact(AlarmManager.RTC_WAKEUP, time, pending)
         }
     }
 
