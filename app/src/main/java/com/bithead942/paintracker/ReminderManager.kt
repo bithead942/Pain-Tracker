@@ -26,12 +26,11 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        am.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP,
-            first.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            dailyPending
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        }
     }
 
     fun rescheduleForTomorrow(context: Context) {
@@ -54,12 +53,11 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        am.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP,
-            first.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            dailyPending
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        }
     }
 
     fun scheduleFollowUp(context: Context) {

@@ -11,6 +11,7 @@ class ReminderReceiver : BroadcastReceiver() {
         when (intent.action) {
             ACTION_DAILY -> {
                 notify(context, settings)
+                ReminderManager.reschedule(context)
                 ReminderManager.scheduleFollowUp(context)
             }
             ACTION_FOLLOW_UP -> {
