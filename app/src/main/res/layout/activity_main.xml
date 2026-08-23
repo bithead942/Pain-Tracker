@@ -59,6 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:layout_margin="16dp"
+                android:background="@drawable/pressure_background"
+                android:padding="8dp"
                 android:text="@string/pressure"
                 android:textSize="16sp"
                 android:textStyle="bold" />
