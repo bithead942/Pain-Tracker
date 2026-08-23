@@ -20,6 +20,10 @@ class BarChartView @JvmOverloads constructor(
     private val data = mutableListOf<Pair<String, Int>>()
     private val pressureData = mutableListOf<Pair<String, Int>>()
 
+    private val pressureMin = 998.225f
+    private val pressureMid = 1013.25f
+    private val pressureMax = 1028.275f
+
     fun setData(values: List<Pair<String, Int>>) {
         data.clear()
         data.addAll(values)
@@ -57,9 +61,11 @@ class BarChartView @JvmOverloads constructor(
         }
 
         textPaint.textAlign = Paint.Align.LEFT
-        canvas.drawText("1050", width - padding + 10, padding + 8, textPaint)
-        canvas.drawText("1000", width - padding + 10, padding + chartH / 2 + 8, textPaint)
-        canvas.drawText("950", width - padding + 10, bottom + 8, textPaint)
+        textPaint.textSize = 18f
+        canvas.drawText("%.3f".format(pressureMax), width - padding + 10, padding + 8, textPaint)
+        canvas.drawText("%.2f".format(pressureMid), width - padding + 10, padding + chartH / 2 + 8, textPaint)
+        canvas.drawText("%.3f".format(pressureMin), width - padding + 10, bottom + 8, textPaint)
+        textPaint.textSize = 24f
 
         if (data.isEmpty()) return
         val gap = chartW / data.size
@@ -85,11 +91,12 @@ class BarChartView @JvmOverloads constructor(
         linePaint.strokeWidth = 4f
         dotPaint.color = Color.BLUE
 
+        val range = pressureMax - pressureMin
         val points = mutableListOf<Pair<Float, Float>>()
         for ((i, pair) in pressureData.withIndex()) {
             val pressure = pair.second
             if (pressure == -1) continue
-            val t = ((pressure - 950).coerceIn(0, 100)) / 100f
+            val t = ((pressure - pressureMin) / range).coerceIn(0f, 1f)
             val y = bottom - t * chartH
             val x = padding + i * gap + gap / 2
             points.add(x to y)
