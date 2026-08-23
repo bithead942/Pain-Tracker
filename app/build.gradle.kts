@@ -25,6 +25,13 @@ android {
             )
         }
     }
+
+    applicationVariants.all {
+        outputs.all {
+            outputFileName = "PainTracker.apk"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
