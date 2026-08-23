@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -65,7 +66,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun onSubmit() {
         val entries = bodyMapView.getActiveEntries()
-        PainLogStore.saveLog(this, PainLogStore.today(), entries)
+        val today = PainLogStore.today()
+        if (PainLogStore.getLog(this, today) != null) {
+            AlertDialog.Builder(this)
+                .setTitle("Overwrite today?")
+                .setMessage("A log for today already exists. Do you want to overwrite it?")
+                .setPositiveButton("OK") { _, _ ->
+                    saveLog(today, entries)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } else {
+            saveLog(today, entries)
+        }
+    }
+
+    private fun saveLog(date: String, entries: List<PainLogStore.PainEntry>) {
+        PainLogStore.saveLog(this, date, entries)
         statusText.text = getString(R.string.log_recorded_today)
         ReminderManager.cancelFollowUp(this)
         Toast.makeText(this, "Pain log saved", Toast.LENGTH_SHORT).show()
