@@ -6,24 +6,22 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 
 object NotificationHelper {
     private const val CHANNEL_ID = "pain_tracker_channel"
 
-    fun createNotificationChannel(context: Context, sound: Boolean, vibrate: Boolean) {
+    fun createNotificationChannel(context: Context, sound: Boolean, vibrate: Boolean, soundUri: Uri? = null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.deleteNotificationChannel(CHANNEL_ID)
             val name = context.getString(R.string.pain_tracker)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                if (sound) {
-                    setSound(
-                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
-                        null
-                    )
+                if (sound && soundUri != null) {
+                    setSound(soundUri, null)
                 } else {
                     setSound(null, null)
                 }
@@ -34,7 +32,7 @@ object NotificationHelper {
         }
     }
 
-    fun showNotification(context: Context, sound: Boolean, vibrate: Boolean) {
+    fun showNotification(context: Context, sound: Boolean, vibrate: Boolean, soundUri: Uri? = null) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
@@ -51,8 +49,8 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            if (sound) {
-                builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            if (sound && soundUri != null) {
+                builder.setSound(soundUri)
             }
             if (vibrate) {
                 builder.setVibrate(longArrayOf(0, 500))

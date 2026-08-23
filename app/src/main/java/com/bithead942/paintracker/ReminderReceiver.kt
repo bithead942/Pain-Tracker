@@ -3,6 +3,7 @@ package com.bithead942.paintracker
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -20,8 +21,9 @@ class ReminderReceiver : BroadcastReceiver() {
     }
 
     private fun notify(context: Context, settings: SettingsStore) {
-        NotificationHelper.createNotificationChannel(context, settings.soundEnabled, settings.vibrationEnabled)
-        NotificationHelper.showNotification(context, settings.soundEnabled, settings.vibrationEnabled)
+        val soundUri = if (settings.soundEnabled && settings.soundUri.isNotEmpty()) Uri.parse(settings.soundUri) else null
+        NotificationHelper.createNotificationChannel(context, settings.soundEnabled, settings.vibrationEnabled, soundUri)
+        NotificationHelper.showNotification(context, settings.soundEnabled, settings.vibrationEnabled, soundUri)
     }
 
     companion object {

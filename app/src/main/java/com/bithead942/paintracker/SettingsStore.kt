@@ -2,6 +2,7 @@ package com.bithead942.paintracker
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.RingtoneManager
 
 class SettingsStore(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -17,6 +18,10 @@ class SettingsStore(context: Context) {
     var soundEnabled: Boolean
         get() = prefs.getBoolean(SOUND, true)
         set(value) = prefs.edit().putBoolean(SOUND, value).apply()
+
+    var soundUri: String
+        get() = prefs.getString(SOUND_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)?.toString() ?: "") ?: ""
+        set(value) = prefs.edit().putString(SOUND_URI, value).apply()
 
     var vibrationEnabled: Boolean
         get() = prefs.getBoolean(VIBRATE, true)
@@ -35,6 +40,7 @@ class SettingsStore(context: Context) {
         private const val HOUR = "reminder_hour"
         private const val MINUTE = "reminder_minute"
         private const val SOUND = "sound_enabled"
+        private const val SOUND_URI = "sound_uri"
         private const val VIBRATE = "vibration_enabled"
         private const val INTERVAL = "reminder_interval"
         private const val REMINDERS = "reminders_enabled"

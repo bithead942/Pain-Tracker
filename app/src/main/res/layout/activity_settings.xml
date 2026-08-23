@@ -56,6 +56,24 @@
         android:layout_marginTop="8dp"
         android:text="@string/sound" />
 
+    <TextView
+        android:id="@+id/soundNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="@string/change_sound"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/soundSelectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:text="@string/change_sound" />
+
     <Switch
         android:id="@+id/vibrateSwitch"
         android:layout_width="match_parent"
