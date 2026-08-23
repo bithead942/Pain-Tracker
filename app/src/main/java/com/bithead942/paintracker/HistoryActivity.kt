@@ -77,10 +77,12 @@ class HistoryActivity : AppCompatActivity() {
                 .replace("Right ", "R ")
             "$short (${severityName(it.severity)})"
         }
-        return if (parts.isEmpty()) {
-            "${log.date}: no pain recorded"
-        } else {
-            "${log.date}: ${parts.joinToString(", ")}"
+        val pressurePart = if (log.pressure != -1) "${log.pressureLabel} (${log.pressure} hPa)" else null
+        return when {
+            pressurePart != null && parts.isEmpty() -> "${log.date}: $pressurePart - no pain recorded"
+            pressurePart != null -> "${log.date}: $pressurePart - ${parts.joinToString(", ")}"
+            parts.isEmpty() -> "${log.date}: no pain recorded"
+            else -> "${log.date}: ${parts.joinToString(", ")}"
         }
     }
 
