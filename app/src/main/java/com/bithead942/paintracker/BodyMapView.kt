@@ -21,21 +21,7 @@ class BodyMapView @JvmOverloads constructor(
     private val bodyBitmap: Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.body_map)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private val hotspots = listOf(
-        Hotspot("Left ankle", 0.40f, 0.93f),
-        Hotspot("Right ankle", 0.60f, 0.93f),
-        Hotspot("Left knee", 0.40f, 0.73f),
-        Hotspot("Right knee", 0.60f, 0.73f),
-        Hotspot("Left hip", 0.38f, 0.52f),
-        Hotspot("Right hip", 0.62f, 0.52f),
-        Hotspot("Left wrist", 0.20f, 0.48f),
-        Hotspot("Right wrist", 0.80f, 0.48f),
-        Hotspot("Left elbow", 0.22f, 0.36f),
-        Hotspot("Right elbow", 0.78f, 0.36f),
-        Hotspot("Left shoulder", 0.28f, 0.24f),
-        Hotspot("Right shoulder", 0.72f, 0.24f),
-        Hotspot("Neck", 0.50f, 0.18f)
-    )
+    private val hotspots = HOTSPOTS
 
     data class Hotspot(val name: String, val relX: Float, val relY: Float, var state: Int = 0)
 
@@ -136,5 +122,25 @@ class BodyMapView @JvmOverloads constructor(
 
     override fun performClick(): Boolean {
         return super.performClick()
+    }
+
+    companion object {
+        private val HOTSPOTS = listOf(
+            Hotspot("Left ankle", 0.40f, 0.93f),
+            Hotspot("Right ankle", 0.60f, 0.93f),
+            Hotspot("Left knee", 0.40f, 0.73f),
+            Hotspot("Right knee", 0.60f, 0.73f),
+            Hotspot("Left hip", 0.38f, 0.52f),
+            Hotspot("Right hip", 0.62f, 0.52f),
+            Hotspot("Left wrist", 0.20f, 0.48f),
+            Hotspot("Right wrist", 0.80f, 0.48f),
+            Hotspot("Left elbow", 0.22f, 0.36f),
+            Hotspot("Right elbow", 0.78f, 0.36f),
+            Hotspot("Left shoulder", 0.28f, 0.24f),
+            Hotspot("Right shoulder", 0.72f, 0.24f),
+            Hotspot("Neck", 0.50f, 0.18f)
+        )
+
+        val LOCATIONS = HOTSPOTS.map { it.name }
     }
 }

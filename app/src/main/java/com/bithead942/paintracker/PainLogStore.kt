@@ -29,7 +29,7 @@ object PainLogStore {
 
     fun getLog(context: Context, date: String): PainLog? = loadAll(context)[date]
 
-    fun getRecentLogs(context: Context, days: Int = 7): List<Pair<String, Int>> {
+    fun getRecentLogs(context: Context, days: Int = 7, location: String? = null): List<Pair<String, Int>> {
         val all = loadAll(context)
         val result = mutableListOf<Pair<String, Int>>()
         val cal = Calendar.getInstance()
@@ -38,8 +38,15 @@ object PainLogStore {
             cal.add(Calendar.DAY_OF_YEAR, -i)
             val date = dateFormatter.format(cal.time)
             val log = all[date]
-            val max = log?.entries?.maxOfOrNull { it.severity } ?: 0
-            result.add(date to max)
+            if (location == null) {
+                val max = log?.entries?.maxOfOrNull { it.severity } ?: 0
+                result.add(date to max)
+            } else {
+                val entry = log?.entries?.find { it.location == location }
+                if (entry != null) {
+                    result.add(date to entry.severity)
+                }
+            }
         }
         return result
     }
