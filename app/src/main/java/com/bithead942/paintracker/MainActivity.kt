@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.action_reset_history -> confirmResetHistory()
                 R.id.action_share -> shareHistory()
+                R.id.action_exit -> finish()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

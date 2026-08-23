@@ -9,4 +9,8 @@ build/
 .cxx
 /*.jpg
 /*.png
+/app/src/main/ic_launcher-playstore.png
+/app/src/main/res/drawable-*/
+/app/src/main/res/mipmap-*/
+/app/src/main/res/values/ic_launcher_background.xml
 local.properties

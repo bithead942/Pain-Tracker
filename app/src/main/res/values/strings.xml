@@ -18,4 +18,5 @@
     <string name="reset_history">Reset history</string>
     <string name="filter">Filter:</string>
     <string name="share">Share</string>
+    <string name="exit">Exit</string>
 </resources>
