@@ -26,6 +26,10 @@ class SettingsStore(context: Context) {
         get() = prefs.getInt(INTERVAL, 5)
         set(value) = prefs.edit().putInt(INTERVAL, value).apply()
 
+    var remindersEnabled: Boolean
+        get() = prefs.getBoolean(REMINDERS, true)
+        set(value) = prefs.edit().putBoolean(REMINDERS, value).apply()
+
     companion object {
         private const val PREFS_NAME = "pain_tracker_settings"
         private const val HOUR = "reminder_hour"
@@ -33,5 +37,6 @@ class SettingsStore(context: Context) {
         private const val SOUND = "sound_enabled"
         private const val VIBRATE = "vibration_enabled"
         private const val INTERVAL = "reminder_interval"
+        private const val REMINDERS = "reminders_enabled"
     }
 }

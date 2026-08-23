@@ -10,6 +10,7 @@
     <string name="reminder_time">Daily reminder time</string>
     <string name="reminder_frequency">Reminder frequency after daily trigger</string>
     <string name="pain_tracker">Pain Tracker</string>
+    <string name="reminders_enabled">Reminders enabled</string>
     <string name="log_today">Time to record your pain</string>
     <string name="log_recorded_today">Log recorded for today</string>
     <string name="no_log_today">No log recorded today</string>

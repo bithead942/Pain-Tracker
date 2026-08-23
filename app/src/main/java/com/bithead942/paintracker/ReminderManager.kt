@@ -69,6 +69,11 @@ object ReminderManager {
         }
     }
 
+    fun cancelAll(context: Context) {
+        cancelDaily(context)
+        cancelFollowUp(context)
+    }
+
     private fun cancelDaily(context: Context) {
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderReceiver::class.java).apply {
