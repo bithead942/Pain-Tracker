@@ -32,9 +32,9 @@ class BodyMapView @JvmOverloads constructor(
         Hotspot("Right wrist", 0.80f, 0.48f),
         Hotspot("Left elbow", 0.22f, 0.36f),
         Hotspot("Right elbow", 0.78f, 0.36f),
-        Hotspot("Left shoulder", 0.28f, 0.21f),
-        Hotspot("Right shoulder", 0.72f, 0.21f),
-        Hotspot("Neck", 0.50f, 0.15f)
+        Hotspot("Left shoulder", 0.28f, 0.24f),
+        Hotspot("Right shoulder", 0.72f, 0.24f),
+        Hotspot("Neck", 0.50f, 0.18f)
     )
 
     data class Hotspot(val name: String, val relX: Float, val relY: Float, var state: Int = 0)
