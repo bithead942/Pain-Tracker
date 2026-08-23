@@ -191,15 +191,15 @@ class MainActivity : AppCompatActivity() {
                     val current = json.getJSONObject("current")
                     val pressure = current.getDouble("surface_pressure")
                     val color = when {
-                        pressure < 983.33 -> android.graphics.Color.GREEN
-                        pressure < 1016.67 -> android.graphics.Color.YELLOW
+                        pressure < 1010 -> android.graphics.Color.GREEN
+                        pressure < 1020 -> android.graphics.Color.YELLOW
                         else -> android.graphics.Color.RED
                     }
                     val pressureInt = pressure.toInt()
                     currentPressure = pressureInt
                     val label = when {
-                        pressure < 983.33 -> "Low Pressure"
-                        pressure < 1016.67 -> "Avg Pressure"
+                        pressure < 1010 -> "Low Pressure"
+                        pressure < 1020 -> "Avg Pressure"
                         else -> "High Pressure"
                     }
                     runOnUiThread {

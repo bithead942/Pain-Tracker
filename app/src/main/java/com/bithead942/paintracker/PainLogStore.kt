@@ -25,8 +25,8 @@ object PainLogStore {
         val time = timeFormatter.format(Date())
         val pressureLabel = when {
             pressure == -1 -> ""
-            pressure < 983.33 -> "low"
-            pressure < 1016.67 -> "average"
+            pressure < 1010 -> "low"
+            pressure < 1020 -> "average"
             else -> "high"
         }
         logs[date] = PainLog(date, time, entries, pressure, pressureLabel)
