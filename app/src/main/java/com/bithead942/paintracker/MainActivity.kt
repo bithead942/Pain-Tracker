@@ -9,6 +9,11 @@ import android.net.Uri
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.location.LocationManager
+import java.net.HttpURLConnection
+import java.net.URL
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -26,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bodyMapView: BodyMapView
     private lateinit var statusText: TextView
     private lateinit var submitButton: Button
+    private lateinit var pressureText: TextView
     private lateinit var hamburgerButton: ImageButton
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
@@ -41,6 +47,15 @@ class MainActivity : AppCompatActivity() {
     ) { isGranted: Boolean ->
         if (!isGranted) {
             Toast.makeText(this, "Notification permission is required for reminders", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+            fetchPressure()
         }
     }
 
@@ -71,8 +86,16 @@ class MainActivity : AppCompatActivity() {
         bodyMapView = findViewById(R.id.bodyMapView)
         statusText = findViewById(R.id.statusText)
         submitButton = findViewById(R.id.submitButton)
+        pressureText = findViewById(R.id.pressureText)
 
         submitButton.setOnClickListener { onSubmit() }
+
+        if (!hasLocationPermission()) {
+            locationPermissionLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        }
 
         val settings = SettingsStore(this)
         if (settings.lastPurgeDate != PainLogStore.today()) {
@@ -98,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             addAction(Intent.ACTION_TIME_CHANGED)
         })
         loadToday()
+        if (hasLocationPermission()) fetchPressure()
     }
 
     override fun onPause() {
@@ -128,6 +152,45 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    private fun hasLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun fetchPressure() {
+        try {
+            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            if (location == null) {
+                runOnUiThread { pressureText.text = getString(R.string.pressure) }
+                return
+            }
+            val url = URL(
+                "https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=surface_pressure"
+            )
+            Thread {
+                try {
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.requestMethod = "GET"
+                    connection.connectTimeout = 10000
+                    connection.readTimeout = 10000
+                    val reader = BufferedReader(InputStreamReader(connection.inputStream))
+                    val response = reader.readText()
+                    connection.disconnect()
+                    val json = org.json.JSONObject(response)
+                    val current = json.getJSONObject("current")
+                    val pressure = current.getDouble("surface_pressure")
+                    runOnUiThread { pressureText.text = "${pressure.toInt()} hPa" }
+                } catch (e: Exception) {
+                    runOnUiThread { pressureText.text = getString(R.string.pressure) }
+                }
+            }.start()
+        } catch (e: Exception) {
+            pressureText.text = getString(R.string.pressure)
+        }
     }
 
     private fun loadToday() {

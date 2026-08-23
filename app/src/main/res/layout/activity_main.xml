@@ -43,11 +43,26 @@
                 android:textStyle="bold" />
         </FrameLayout>
 
-        <com.bithead942.paintracker.BodyMapView
-            android:id="@+id/bodyMapView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <com.bithead942.paintracker.BodyMapView
+                android:id="@+id/bodyMapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/pressureText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="16dp"
+                android:text="@string/pressure"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/statusText"

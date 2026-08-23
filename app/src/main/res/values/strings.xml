@@ -19,4 +19,5 @@
     <string name="filter">Filter:</string>
     <string name="share">Share</string>
     <string name="exit">Exit</string>
+    <string name="pressure">-- hPa</string>
 </resources>
