@@ -86,30 +86,35 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
 
         <RadioButton
             android:id="@+id/interval5"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="5 min" />
 
         <RadioButton
             android:id="@+id/interval15"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="15 min" />
 
         <RadioButton
             android:id="@+id/interval30"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="30 min" />
 
         <RadioButton
             android:id="@+id/interval60"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="1 hour" />
     </RadioGroup>
 
