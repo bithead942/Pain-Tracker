@@ -12,7 +12,7 @@ object PainLogStore {
     private const val DATE_FORMAT = "yyyy-MM-dd"
     private const val TIME_FORMAT = "h:mm a"
 
-    data class PainLog(val date: String, val savedAt: String, val entries: List<PainEntry>)
+    data class PainLog(val date: String, val savedAt: String, val entries: List<PainEntry>, val pressure: Int = -1)
     data class PainEntry(val location: String, val severity: Int)
 
     private val dateFormatter = SimpleDateFormat(DATE_FORMAT, Locale.US)
@@ -20,10 +20,10 @@ object PainLogStore {
 
     fun today(): String = dateFormatter.format(Date())
 
-    fun saveLog(context: Context, date: String, entries: List<PainEntry>) {
+    fun saveLog(context: Context, date: String, entries: List<PainEntry>, pressure: Int = -1) {
         val logs = loadAll(context).toMutableMap()
         val time = timeFormatter.format(Date())
-        logs[date] = PainLog(date, time, entries)
+        logs[date] = PainLog(date, time, entries, pressure)
         writeLogs(context, logs.values.toList())
     }
 
@@ -74,6 +74,9 @@ object PainLogStore {
         sb.appendLine()
         for (log in logs) {
             sb.appendLine(log.date)
+            if (log.pressure != -1) {
+                sb.appendLine("  Pressure: ${log.pressure} hPa")
+            }
             if (log.entries.isEmpty()) {
                 sb.appendLine("  No pain recorded")
             } else {
@@ -120,7 +123,8 @@ object PainLogStore {
                 val item = arr.getJSONObject(i)
                 entries.add(PainEntry(item.getString("location"), item.getInt("severity")))
             }
-            map[key] = PainLog(key, savedAt, entries)
+            val pressure = if (value is JSONObject) value.optInt("pressure", -1) else -1
+            map[key] = PainLog(key, savedAt, entries, pressure)
         }
         return map
     }
@@ -138,6 +142,7 @@ object PainLogStore {
             val logObj = JSONObject()
             logObj.put("savedAt", log.savedAt)
             logObj.put("entries", arr)
+            logObj.put("pressure", log.pressure)
             obj.put(log.date, logObj)
         }
         File(context.filesDir, FILE_NAME).writeText(obj.toString())

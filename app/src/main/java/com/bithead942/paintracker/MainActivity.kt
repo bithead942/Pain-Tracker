@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var submitButton: Button
     private lateinit var pressureText: TextView
     private lateinit var hamburgerButton: ImageButton
+
+    private var currentPressure: Int? = null
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
 
@@ -188,8 +190,10 @@ class MainActivity : AppCompatActivity() {
                         pressure < 1016.67 -> android.graphics.Color.YELLOW
                         else -> android.graphics.Color.RED
                     }
+                    val pressureInt = pressure.toInt()
+                    currentPressure = pressureInt
                     runOnUiThread {
-                        pressureText.text = "${pressure.toInt()} hPa"
+                        pressureText.text = "$pressureInt hPa"
                         pressureText.setTextColor(color)
                     }
                 } catch (e: Exception) {
@@ -234,7 +238,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveLog(date: String, entries: List<PainLogStore.PainEntry>) {
-        PainLogStore.saveLog(this, date, entries)
+        PainLogStore.saveLog(this, date, entries, currentPressure ?: -1)
         val saved = PainLogStore.getLog(this, date)
         statusText.text = if (saved?.savedAt?.isNotEmpty() == true) {
             "${getString(R.string.log_recorded_today)} at ${saved.savedAt}"
