@@ -97,7 +97,7 @@ class BodyMapView @JvmOverloads constructor(
         for (h in hotspots) {
             val x = dst.left + h.relX * dst.width()
             val y = dst.top + h.relY * dst.height()
-            val r = min(dst.width(), dst.height()) * 0.065f
+            val r = min(dst.width(), dst.height()) * 0.085f
             if (h.state > 0) {
                 val (red, green, blue) = when (h.state) {
                     1 -> Triple(255, 255, 0)      // Mild - yellow
@@ -119,7 +119,7 @@ class BodyMapView @JvmOverloads constructor(
                 for (h in hotspots) {
                     val x = dst.left + h.relX * dst.width()
                     val y = dst.top + h.relY * dst.height()
-                    val r = min(dst.width(), dst.height()) * 0.09f
+                    val r = min(dst.width(), dst.height()) * 0.12f
                     val dx = event.x - x
                     val dy = event.y - y
                     if (dx * dx + dy * dy <= r * r) {
