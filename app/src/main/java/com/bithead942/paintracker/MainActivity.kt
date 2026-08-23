@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.action_history -> startActivity(Intent(this, HistoryActivity::class.java))
                 R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.action_reset_history -> confirmResetHistory()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -93,6 +94,19 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(dateChangeReceiver)
+    }
+
+    private fun confirmResetHistory() {
+        AlertDialog.Builder(this)
+            .setTitle("Reset history")
+            .setMessage("All log history will be deleted. Are you sure?")
+            .setPositiveButton("Yes") { _, _ ->
+                PainLogStore.clearHistory(this)
+                loadToday()
+                Toast.makeText(this, "History cleared", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     private fun loadToday() {

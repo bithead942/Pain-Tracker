@@ -51,6 +51,11 @@ object PainLogStore {
         return result
     }
 
+    fun clearHistory(context: Context) {
+        val file = File(context.filesDir, FILE_NAME)
+        if (file.exists()) file.delete()
+    }
+
     fun getAllLogs(context: Context, descending: Boolean = true): List<PainLog> {
         val all = loadAll(context).values.toList()
         return if (descending) all.sortedByDescending { it.date } else all.sortedBy { it.date }
