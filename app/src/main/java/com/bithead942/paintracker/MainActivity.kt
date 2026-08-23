@@ -1,7 +1,10 @@
 package com.bithead942.paintracker
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +28,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var hamburgerButton: ImageButton
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
+
+    private val dateChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            loadToday()
+        }
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -72,6 +81,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(dateChangeReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_DATE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+        })
+        loadToday()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(dateChangeReceiver)
+    }
+
     private fun loadToday() {
         val log = PainLogStore.getLog(this, PainLogStore.today())
         if (log != null) {
@@ -83,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             bodyMapView.setJoints(log.entries)
         } else {
             statusText.text = getString(R.string.no_log_today)
+            bodyMapView.setJoints(emptyList())
         }
     }
 
