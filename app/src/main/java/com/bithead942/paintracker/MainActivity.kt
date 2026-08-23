@@ -183,7 +183,15 @@ class MainActivity : AppCompatActivity() {
                     val json = org.json.JSONObject(response)
                     val current = json.getJSONObject("current")
                     val pressure = current.getDouble("surface_pressure")
-                    runOnUiThread { pressureText.text = "${pressure.toInt()} hPa" }
+                    val color = when {
+                        pressure < 983.33 -> android.graphics.Color.GREEN
+                        pressure < 1016.67 -> android.graphics.Color.YELLOW
+                        else -> android.graphics.Color.RED
+                    }
+                    runOnUiThread {
+                        pressureText.text = "${pressure.toInt()} hPa"
+                        pressureText.setTextColor(color)
+                    }
                 } catch (e: Exception) {
                     runOnUiThread { pressureText.text = getString(R.string.pressure) }
                 }
