@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bodyMapView: BodyMapView
     private lateinit var statusText: TextView
     private lateinit var submitButton: Button
+    private lateinit var pressureLabel: TextView
     private lateinit var pressureText: TextView
     private lateinit var hamburgerButton: ImageButton
 
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         bodyMapView = findViewById(R.id.bodyMapView)
         statusText = findViewById(R.id.statusText)
         submitButton = findViewById(R.id.submitButton)
+        pressureLabel = findViewById(R.id.pressureLabel)
         pressureText = findViewById(R.id.pressureText)
 
         submitButton.setOnClickListener { onSubmit() }
@@ -167,7 +169,10 @@ class MainActivity : AppCompatActivity() {
             val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                 ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
             if (location == null) {
-                runOnUiThread { pressureText.text = getString(R.string.pressure) }
+                runOnUiThread {
+                    pressureLabel.text = ""
+                    pressureText.text = getString(R.string.pressure)
+                }
                 return
             }
             val url = URL(
@@ -192,12 +197,22 @@ class MainActivity : AppCompatActivity() {
                     }
                     val pressureInt = pressure.toInt()
                     currentPressure = pressureInt
+                    val label = when {
+                        pressure < 983.33 -> "Low Pressure"
+                        pressure < 1016.67 -> "Avg Pressure"
+                        else -> "High Pressure"
+                    }
                     runOnUiThread {
+                        pressureLabel.text = label
                         pressureText.text = "$pressureInt hPa"
+                        pressureLabel.setTextColor(color)
                         pressureText.setTextColor(color)
                     }
                 } catch (e: Exception) {
-                    runOnUiThread { pressureText.text = getString(R.string.pressure) }
+                    runOnUiThread {
+                        pressureLabel.text = ""
+                        pressureText.text = getString(R.string.pressure)
+                    }
                 }
             }.start()
         } catch (e: Exception) {
