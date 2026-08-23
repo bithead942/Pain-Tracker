@@ -81,7 +81,13 @@ object PainLogStore {
         for (log in logs) {
             sb.appendLine(log.date)
             if (log.pressure != -1) {
-                sb.appendLine("  Pressure: ${log.pressureLabel} (${log.pressure} hPa)")
+                val label = when (log.pressureLabel) {
+                    "low" -> "Low Pressure"
+                    "average" -> "Avg Pressure"
+                    "high" -> "High Pressure"
+                    else -> log.pressureLabel
+                }
+                sb.appendLine("  Pressure: $label (${log.pressure} hPa)")
             }
             if (log.entries.isEmpty()) {
                 sb.appendLine("  No pain recorded")
