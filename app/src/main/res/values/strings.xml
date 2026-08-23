@@ -16,4 +16,5 @@
     <string name="reminders_enabled">Reminders enabled</string>
     <string name="change_sound">Change sound</string>
     <string name="reset_history">Reset history</string>
+    <string name="filter">Filter:</string>
 </resources>
