@@ -102,6 +102,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         val settings = SettingsStore(this)
+        if (!settings.hasTestData) {
+            PainLogStore.regenerateTestData(this, 31)
+            settings.hasTestData = true
+        }
+
         if (settings.lastPurgeDate != PainLogStore.today()) {
             PainLogStore.purgeOldLogs(this)
             settings.lastPurgeDate = PainLogStore.today()

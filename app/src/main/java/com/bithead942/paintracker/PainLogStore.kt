@@ -35,6 +35,22 @@ object PainLogStore {
 
     fun getLog(context: Context, date: String): PainLog? = loadAll(context)[date]
 
+    fun regenerateTestData(context: Context, days: Int = 31) {
+        clearHistory(context)
+        val random = java.util.Random()
+        val cal = Calendar.getInstance()
+        for (i in days - 1 downTo 0) {
+            cal.time = Date()
+            cal.add(Calendar.DAY_OF_YEAR, -i)
+            val date = dateFormatter.format(cal.time)
+            val pressure = 990 + random.nextInt(50)
+            val count = 1 + random.nextInt(3)
+            val selected = BodyMapView.LOCATIONS.shuffled(random).take(count)
+            val entries = selected.map { PainEntry(it, 1 + random.nextInt(3)) }
+            saveLog(context, date, entries, pressure)
+        }
+    }
+
     fun purgeOldLogs(context: Context, months: Int = 6) {
         val logs = loadAll(context).toMutableMap()
         val cal = Calendar.getInstance()
