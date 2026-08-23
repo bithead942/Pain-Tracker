@@ -26,8 +26,9 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val info = AlarmManager.AlarmClockInfo(first.timeInMillis, null)
+            am.setAlarmClock(info, dailyPending)
         } else {
             am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
         }
@@ -53,8 +54,9 @@ object ReminderManager {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val info = AlarmManager.AlarmClockInfo(first.timeInMillis, null)
+            am.setAlarmClock(info, dailyPending)
         } else {
             am.setExact(AlarmManager.RTC_WAKEUP, first.timeInMillis, dailyPending)
         }
