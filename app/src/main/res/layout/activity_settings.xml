@@ -11,13 +11,28 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_margin="8dp"
-        android:text="@string/back" />
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="8dp"
+            android:text="@string/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/settings"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
 
     <Switch
         android:id="@+id/reminderEnabledSwitch"
