@@ -30,7 +30,12 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     private fun formatLog(log: PainLogStore.PainLog): String {
-        val parts = log.entries.map { "${it.location} (${severityName(it.severity)})" }
+        val parts = log.entries.map {
+            val short = it.location
+                .replace("Left ", "L ")
+                .replace("Right ", "R ")
+            "$short (${severityName(it.severity)})"
+        }
         return if (parts.isEmpty()) {
             "${log.date}: no pain recorded"
         } else {
