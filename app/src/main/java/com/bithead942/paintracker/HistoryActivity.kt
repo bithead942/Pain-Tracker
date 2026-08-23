@@ -1,7 +1,9 @@
 package com.bithead942.paintracker
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -54,7 +56,17 @@ class HistoryActivity : AppCompatActivity() {
             allLogs.filter { it.entries.any { e -> e.location == location } }
         }
         val items = logs.map { formatLog(it, location) }
-        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, items)
+        listView.adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                if (position % 2 == 1) {
+                    view.setBackgroundColor(Color.parseColor("#F0F0F0"))
+                } else {
+                    view.setBackgroundColor(Color.TRANSPARENT)
+                }
+                return view
+            }
+        }
     }
 
     private fun formatLog(log: PainLogStore.PainLog, location: String?): String {
